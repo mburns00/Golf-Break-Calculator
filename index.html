@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Quick Golf Tools</title>
+    <style>
+      /* Reset and Base Styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        padding: 10px;
+        background-color: #f0f2f5;
+        max-width: 100%;
+        margin: 0 auto;
+      }
+
+      /* Main Container */
+      .container {
+        max-width: 500px;
+        margin: 20px auto;
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+      }
+
+      /* Form Styles */
+      form {
+        display: grid;
+        gap: 15px;
+      }
+
+      label {
+        font-size: 1rem;
+        font-weight: bold;
+      }
+
+      input[type="number"] {
+        padding: 12px;
+        font-size: 1.1rem;
+        border: 2px solid #ccc;
+        border-radius: 8px;
+        outline: none;
+        transition: border-color 0.3s;
+      }
+
+      input[type="number"]:focus {
+        border-color: #007bff;
+      }
+
+      /* Button Group Styles */
+      .button-group {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+      }
+
+      .button-group button {
+        flex: 1;
+        padding: 12px;
+        font-size: 1rem;
+        border: 2px solid #ccc;
+        border-radius: 8px;
+        background-color: #f0f2f5;
+        cursor: pointer;
+        transition: background-color 0.3s, border-color 0.3s, transform 0.2s;
+      }
+
+      .button-group button:hover {
+        transform: scale(1.05);
+      }
+
+      .button-group button.active {
+        background-color: #007bff;
+        color: white;
+        border-color: #007bff;
+      }
+
+      /* Buttons */
+      button.calculate-btn,
+      button.reset-btn {
+        padding: 14px;
+        font-size: 1.1rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        width: 100%;
+        transition: background-color 0.3s;
+      }
+
+      button.calculate-btn {
+        background-color: #28a745;
+        color: white;
+      }
+
+      button.calculate-btn:hover {
+        background-color: #218838;
+      }
+
+      button.reset-btn {
+        background-color: #dc3545;
+        color: white;
+      }
+
+      button.reset-btn:hover {
+        background-color: #c82333;
+      }
+
+      /* Result Display */
+      h2 {
+        font-size: 1.3rem;
+        margin-bottom: 10px;
+        color: #333;
+        text-align: center;
+      }
+
+      #result,
+      #pitchResult {
+        margin-top: 15px;
+        background-color: #f8f9fa;
+        padding: 12px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Mobile Optimization */
+      @media (max-width: 600px) {
+        body {
+          padding: 5px;
+        }
+
+        .container {
+          padding: 15px;
+        }
+
+        input,
+        button {
+          font-size: 1rem;
+          padding: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Putt Calculator Section -->
+    <div class="container">
+      <h1>Quick Golf Putt Calculator</h1>
+      <form id="puttForm">
+        <label for="distance">Distance (yards):</label>
+        <input
+          type="number"
+          id="distance"
+          name="distance"
+          min="1"
+          required
+          placeholder="Enter distance in yards"
+        />
+
+        <label>Break Percentage:</label>
+        <div class="button-group" id="breakGroup">
+          <button type="button" onclick="selectOption('break', 0)">0%</button>
+          <button type="button" onclick="selectOption('break', 1)">1%</button>
+          <button type="button" onclick="selectOption('break', 2)">2%</button>
+          <button type="button" onclick="selectOption('break', 3)">3%</button>
+          <button type="button" onclick="selectOption('break', 4)">4%</button>
+          <button type="button" onclick="selectOption('break', 5)">5%</button>
+        </div>
+
+        <label>Slope Type:</label>
+        <div class="button-group" id="slopeTypeGroup">
+          <button type="button" onclick="selectOption('slopeType', 'uphill')">
+            Uphill
+          </button>
+          <button type="button" onclick="selectOption('slopeType', 'downhill')">
+            Downhill
+          </button>
+          <button type="button" onclick="selectOption('slopeType', 'flat')">
+            Flat
+          </button>
+        </div>
+
+        <label>Slope Percentage:</label>
+        <div class="button-group" id="slopePercentGroup">
+          <button type="button" onclick="selectOption('slopePercent', 0)">
+            0%
+          </button>
+          <button type="button" onclick="selectOption('slopePercent', 1)">
+            1%
+          </button>
+          <button type="button" onclick="selectOption('slopePercent', 2)">
+            2%
+          </button>
+          <button type="button" onclick="selectOption('slopePercent', 3)">
+            3%
+          </button>
+          <button type="button" onclick="selectOption('slopePercent', 4)">
+            4%
+          </button>
+          <button type="button" onclick="selectOption('slopePercent', 5)">
+            5%
+          </button>
+        </div>
+
+        <button type="button" class="calculate-btn" onclick="calculatePutt()">
+          Calculate
+        </button>
+        <button type="button" class="reset-btn" onclick="resetForm()">
+          Reset
+        </button>
+      </form>
+
+      <h2>Calculation Result:</h2>
+      <div id="result"></div>
+    </div>
+
+    <!-- Pitch Calculator Section -->
+    <div class="container">
+      <h1>Quick Golf Pitch Calculator</h1>
+      <form id="pitchForm">
+        <label for="totalDistance">Total Distance to Flag (yards):</label>
+        <input
+          type="number"
+          id="totalDistance"
+          name="totalDistance"
+          min="1"
+          required
+          placeholder="Enter total distance to flag"
+        />
+
+        <button type="button" class="calculate-btn" onclick="calculatePitch()">
+          Calculate
+        </button>
+        <button type="button" class="reset-btn" onclick="resetForm()">
+          Reset
+        </button>
+      </form>
+
+      <h2>Pitch Calculation Result:</h2>
+      <div id="pitchResult"></div>
+    </div>
+
+    <script>
+      // Variables to store selected options
+      let selectedOptions = {
+        break: null,
+        slopeType: null,
+        slopePercent: null,
+      };
+
+      // Function to handle button selection
+      function selectOption(type, value) {
+        selectedOptions[type] = value;
+
+        // Update active button style
+        const group = document.getElementById(type + "Group");
+        const buttons = group.getElementsByTagName("button");
+        for (const button of buttons) {
+          button.classList.remove("active");
+        }
+
+        // Highlight the selected button
+        for (const button of buttons) {
+          if (
+            button.innerText.includes(value + "%") ||
+            button.innerText.toLowerCase() === value
+          ) {
+            button.classList.add("active");
+          }
+        }
+      }
+
+      // Predefined distances and references based on corrected chart
+      const swingReferences = [
+        { distance: 3, backswing: "Big Toe", throughSwing: "Big Toe" },
+        { distance: 5, backswing: "Middle Toe", throughSwing: "Middle Toe" },
+        { distance: 10, backswing: "Little Toe", throughSwing: "Little Toe" },
+        {
+          distance: 15,
+          backswing: "Tear Left to Right",
+          throughSwing: "Tear Left to Right",
+        },
+        {
+          distance: 20,
+          backswing: "Right Hand to Middle Thighs",
+          throughSwing: "Right Hand to Middle Thighs",
+        },
+        {
+          distance: 25,
+          backswing: "Outside Hand to Thigh",
+          throughSwing: "Right Hand to Middle Thigh",
+        },
+        {
+          distance: 30,
+          backswing: "Shaft to Middle Thigh",
+          throughSwing: "Shaft to Middle Thigh",
+        },
+        {
+          distance: 35,
+          backswing: "Shaft",
+          throughSwing: "Elbow",
+        },
+        {
+          distance: 40,
+          backswing: "Left Hand to Middle Thigh",
+          throughSwing: "Left Hand to Middle Thigh",
+        },
+        {
+          distance: 45,
+          backswing: "Inside Elbow to Tear",
+          throughSwing: "Elbow to Tear",
+        },
+        {
+          distance: 50,
+          backswing: "Club Butt to Waist",
+          throughSwing: "Club Butt to Waist",
+        },
+        {
+          distance: 55,
+          backswing: "Club Butt to Waist",
+          throughSwing: "Elbow to Tear",
+        },
+        {
+          distance: 60,
+          backswing: "Inside Elbow to Tear",
+          throughSwing: "Elbow to Tear",
+        },
+      ];
+
+      // Function to adjust distance based on slope type and percentage
+      function adjustDistanceForSlope(distanceFeet, slopePercent, slopeType) {
+        const adjustmentPer10Feet = {
+          1: 0.5,
+          2: 1.0,
+          3: 1.5,
+          4: 2.0,
+          5: 2.5,
+          6: 3.0,
+        };
+
+        // Calculate adjustment based on 10-foot increments
+        const adjustment = adjustmentPer10Feet[slopePercent] || 0;
+        const increments = Math.floor(distanceFeet / 10);
+
+        // Double the adjustment for each 10-foot increment
+        const effectiveAdjustment = adjustment * increments;
+
+        if (slopeType === "uphill") {
+          // Add distance for uphill
+          return distanceFeet + effectiveAdjustment;
+        } else if (slopeType === "downhill") {
+          // Subtract distance for downhill
+          return distanceFeet - effectiveAdjustment;
+        }
+        return distanceFeet;
+      }
+
+      // Function to adjust break percentage based on distance and slope type
+      function adjustBreakForDistanceAndSlope(
+        breakPercent,
+        distanceFeet,
+        slopePercent,
+        slopeType
+      ) {
+        const baseAdjustment = {
+          1: distanceFeet >= 20 ? 0.5 : distanceFeet >= 7 ? 0.25 : 0, // 0.25 adjustment for 7-10 feet
+          2: distanceFeet >= 20 ? 1.0 : distanceFeet >= 7 ? 0.25 : 0,
+          3: distanceFeet >= 20 ? 1.5 : distanceFeet >= 7 ? 0.25 : 0,
+          4: distanceFeet >= 20 ? 2.0 : distanceFeet >= 7 ? 0.25 : 0,
+          5: distanceFeet >= 20 ? 2.5 : distanceFeet >= 7 ? 0.25 : 0,
+          6: distanceFeet >= 20 ? 3.0 : distanceFeet >= 7 ? 0.25 : 0,
+        };
+
+        // Calculate the base adjustment for the given slope percentage
+        const baseBreakAdjustment = baseAdjustment[slopePercent] || 0;
+        const increments = Math.floor(distanceFeet / 10);
+
+        // Double the adjustment for each 10-foot increment
+        const effectiveBreakAdjustment = baseBreakAdjustment * increments;
+
+        // Adjust the break based on slope type
+        if (slopeType === "uphill") {
+          // Reduce break for uphill
+          return breakPercent - effectiveBreakAdjustment;
+        } else if (slopeType === "downhill") {
+          // Increase break for downhill
+          return breakPercent + effectiveBreakAdjustment;
+        }
+
+        // No change for flat
+        return breakPercent;
+      }
+
+      // Function to find the closest swing reference with preferences for uphill and downhill
+      function getClosestSwingWithPreference(distanceFeet, slopeType) {
+        let adjustedDistance = distanceFeet;
+
+        // Adjust for uphill preference
+        if (slopeType === "uphill") {
+          adjustedDistance += 2;
+        }
+
+        // Iterate through the swing references to find the most suitable swing
+        let closest = swingReferences[swingReferences.length - 1]; // Default to the longest distance
+
+        for (const ref of swingReferences) {
+          if (adjustedDistance <= ref.distance) {
+            closest = ref;
+            break;
+          }
+        }
+
+        return { ...closest, adjustedDistance };
+      }
+
+      function calculatePutt() {
+        // Get form inputs
+        const distanceYards = parseFloat(
+          document.getElementById("distance").value
+        );
+        const breakPercent = selectedOptions.break;
+        const slopeType = selectedOptions.slopeType;
+        const slopePercent = selectedOptions.slopePercent;
+
+        // Ensure all options are selected
+        if (
+          breakPercent === null ||
+          slopeType === null ||
+          slopePercent === null
+        ) {
+          alert("Please select all options.");
+          return;
+        }
+
+        // Convert distance from yards to feet
+        const distanceFeet = distanceYards * 3;
+
+        // Adjust distance based on slope type and percentage
+        const adjustedDistanceFeet = adjustDistanceForSlope(
+          distanceFeet,
+          slopePercent,
+          slopeType
+        );
+
+        // Adjust the break percentage based on distance and slope type
+        const adjustedBreakPercent = adjustBreakForDistanceAndSlope(
+          breakPercent,
+          distanceFeet,
+          slopePercent,
+          slopeType
+        );
+
+        // Find the closest swing reference with the adjusted distance
+        const closestSwing = getClosestSwingWithPreference(
+          adjustedDistanceFeet,
+          slopeType
+        );
+
+        // Display the result, including adjusted feet and correct break
+        document.getElementById("result").innerHTML = `
+        <p><strong>Recommended Swing:</strong> ${closestSwing.backswing} to ${closestSwing.throughSwing}</p>
+        <p><strong>Aim:</strong> ${adjustedBreakPercent}%</p>
+        <p><strong>Calculated Feet:</strong> ${adjustedDistanceFeet} feet</p>
+      `;
+      }
+
+      // Pitch Calculator Data - Using Total Distance
+      const pitchShots = [
+        { club: "60°", type: "Hips", total: 22 },
+        { club: "60°", type: "Shoulder", total: 34 },
+        { club: "56°", type: "Hips", total: 38 },
+        { club: "60°", type: "Full Pitch", total: 42 },
+        { club: "56°", type: "Shoulder", total: 47 },
+        { club: "52°", type: "Hips", total: 52 },
+        { club: "56°", type: "Full Pitch", total: 54 },
+        { club: "52°", type: "Shoulder", total: 61 },
+        { club: "52°", type: "Full Pitch", total: 66 },
+      ];
+
+      function calculatePitch() {
+        const totalDistance = parseFloat(
+          document.getElementById("totalDistance").value
+        );
+
+        if (isNaN(totalDistance)) {
+          alert("Please enter a valid total distance.");
+          return;
+        }
+
+        // Find the closest shot
+        let recommendedShot = null;
+
+        for (const shot of pitchShots) {
+          if (totalDistance <= shot.total) {
+            recommendedShot = shot;
+            break;
+          }
+        }
+
+        if (recommendedShot) {
+          document.getElementById("pitchResult").innerHTML = `
+          <p><strong>Recommended Shot:</strong> ${recommendedShot.club} ${recommendedShot.type}</p>
+          <p><strong>Target Distance:</strong> ${totalDistance} yards</p>
+        `;
+        } else {
+          document.getElementById(
+            "pitchResult"
+          ).innerHTML = `<p>No suitable shot found.</p>`;
+        }
+      }
+
+      // Reset form and result for both calculators
+      function resetForm() {
+        document.getElementById("puttForm").reset();
+        document.getElementById("pitchForm").reset();
+        document.getElementById("result").innerHTML = "";
+        document.getElementById("pitchResult").innerHTML = "";
+
+        // Reset selected options and button styles
+        selectedOptions = {
+          break: null,
+          slopeType: null,
+          slopePercent: null,
+          landingType: null,
+        };
+        const buttonGroups = document.getElementsByClassName("button-group");
+        for (const group of buttonGroups) {
+          const buttons = group.getElementsByTagName("button");
+          for (const button of buttons) {
+            button.classList.remove("active");
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
